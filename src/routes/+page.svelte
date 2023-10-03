@@ -9,22 +9,13 @@
     let timeouts = [];
     let showArticulation = true;
     let showDynamic = true;
+    let numberOrder = "ascending";
     let isTimerRunning = false;
     let color = "#222222";
 
     const numbers = [
         {
-            number: 5,
-            active: false,
-            duration: 1500,
-        },
-        {
-            number: 4,
-            active: false,
-            duration: 1500,
-        },
-        {
-            number: 3,
+            number: 1,
             active: false,
             duration: 1500,
         },
@@ -34,7 +25,17 @@
             duration: 1500,
         },
         {
-            number: 1,
+            number: 3,
+            active: false,
+            duration: 1500,
+        },
+        {
+            number: 4,
+            active: false,
+            duration: 1500,
+        },
+        {
+            number: 5,
             active: false,
             duration: 1500,
         },
@@ -136,7 +137,7 @@
             //generate a random index
             const randomIndex = randomNumber(0, numbers.length - 1);
             //generate a random duration
-            const randomDuration = randomNumber(800, 1500);
+            const randomDuration = randomNumber(1800, 2000);
             //set the number to be active
             if (!numbers[randomIndex].active) {
                 numbers[randomIndex].active = true;
@@ -146,6 +147,11 @@
                 setTimeout(() => {
                     numbers[randomIndex].active = false;
                 }, randomDuration);
+            }
+
+            if (Math.random() >= 0.25) {
+                setRandomArticulation();
+                setRandomDynamic();
             }
             //call the function recursively
             setRandomActive();
@@ -157,24 +163,13 @@
 
     //set a random articulation
     function setRandomArticulation() {
-        const timeoutId = setTimeout(() => {
-            //the value that represents the articulation
-            articulation = Math.random();
-            setRandomArticulation();
-        }, Math.floor(randomNumber(3000, 15000)));
-
-        timeouts.push(timeoutId); // Store the timeout ID
+        articulation = Math.random();
     }
 
     //set a random articulation
     function setRandomDynamic() {
-        const timeoutId = setTimeout(() => {
-            //the value that represents the articulation
-            dynamic = Math.random();
-            setRandomDynamic();
-        }, Math.floor(randomNumber(3000, 15000)));
-
-        timeouts.push(timeoutId); // Store the timeout ID
+        //the value that represents the articulation
+        dynamic = Math.random();
     }
 </script>
 
@@ -186,9 +181,15 @@
                 {#if start}
                     <div class="d-flex flex-column align-items-center gap-3" transition:fade>
                         <div class="row flex-column flex-sm-row justify-content-center align-items-center gap-sm-2">
-                            {#each numbers as { number, active, duration }}
-                                <Tile {number} {active} {duration} backgroundColor={color} ringColor={$colorsRing[$colorsBackground.indexOf(color)]} />
-                            {/each}
+                            {#if numberOrder === "ascending"}
+                                {#each numbers as { number, active, duration }}
+                                    <Tile {number} {active} {duration} backgroundColor={color} ringColor={$colorsRing[$colorsBackground.indexOf(color)]} />
+                                {/each}
+                            {:else}
+                                {#each [...numbers].reverse() as { number, active, duration }}
+                                    <Tile {number} {active} {duration} backgroundColor={color} ringColor={$colorsRing[$colorsBackground.indexOf(color)]} />
+                                {/each}
+                            {/if}
                         </div>
                         <div class="d-flex justify-content-center align-items-center gap-3">
                             {#if showArticulation}
@@ -224,7 +225,7 @@
                                 {/each}
                             </div>
                         </div>
-                        <div class="d-flex flex-column gap-2 mb-2">
+                        <div class="d-flex flex-column gap-2 mb-3">
                             <div class="form-check d-flex align-items-center gap-2 m-0">
                                 <input class="form-check-input" type="checkbox" id="showArticulation" bind:checked={showArticulation} />
                                 <label class="form-check-label fs-4 text-light" for="showArticulation">Show duration</label>
@@ -233,6 +234,11 @@
                                 <input class="form-check-input" type="checkbox" id="showDynamic" bind:checked={showDynamic} />
                                 <label class="form-check-label fs-4 text-light" for="showDynamic">Show volume</label>
                             </div>
+                            <label class="form-label fs-4 text-light text-center mb-0" for="numberOrder">Number order</label>
+                            <select class="form-select" aria-label="Number order" bind:value={numberOrder}>
+                                <option value="ascending">Ascending</option>
+                                <option value="descending">Descending</option>
+                            </select>
                         </div>
                         <div class="d-flex gap-2">
                             <button class="btn btn-warning fs-3" on:click={() => (start = true)}>Start</button>
@@ -248,9 +254,9 @@
     {/if}
 </section>
 {#if modal}
-    <aside class="min-vh-100 vw-100 position-absolute top-0 start-0" style="background: {color};" transition:fade>
-        <div class="container text-light overflow-x-hidden">
-            <button class="btn-close btn-close-white btn-lg position-absolute top-0 end-0 m-3" on:click={() => (modal = !modal)} />
+    <aside class="min-vh-100 w-100 position-absolute top-0 start-0" style="background: {color};" transition:fade>
+        <div class="container text-light">
+            <button class="btn-close btn-close-white btn-lg position-absolute top-0 end-0 m-5" on:click={() => (modal = !modal)} />
             <h1 class="display-3 text-center mt-5 mb-3">How to play <span class="stylized">Digits</span></h1>
             <hr />
             <p class="fs-4"><span class="stylized">Digits</span> is a piece for keyboard 1+ hands. Although you can play this piece alone, the fun (or at least what I consider the fun) is crowding around a keyboard with what some might deem an "unreasonable" amount of people. The goal is (hopefully 😬) simple; play as many notes at the same time as you are instructed to play. No prior keyboard experience needed!</p>
@@ -297,5 +303,9 @@
 
     .stylized {
         font-family: "Anton", sans-serif;
+    }
+
+    h1, h2, p, li {
+        user-select: none;
     }
 </style>

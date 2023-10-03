@@ -42,6 +42,10 @@
     * {
         font-family: "Inconsolata", monospace;
     }
+
+    h1 {
+        user-select: none;
+    }
     
     .outer-ring {
         width: 100px;
