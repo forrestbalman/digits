@@ -14,17 +14,7 @@
 
     const numbers = [
         {
-            number: 1,
-            active: false,
-            duration: 1500,
-        },
-        {
-            number: 2,
-            active: false,
-            duration: 1500,
-        },
-        {
-            number: 3,
+            number: 5,
             active: false,
             duration: 1500,
         },
@@ -34,7 +24,17 @@
             duration: 1500,
         },
         {
-            number: 5,
+            number: 3,
+            active: false,
+            duration: 1500,
+        },
+        {
+            number: 2,
+            active: false,
+            duration: 1500,
+        },
+        {
+            number: 1,
             active: false,
             duration: 1500,
         },
@@ -191,27 +191,27 @@
                             {/each}
                         </div>
                         <div class="d-flex justify-content-center align-items-center gap-3">
-                            <h2 class="display-2 p-3 {articulation <= 0.5 ? 'fw-light' : 'fw-medium'}">
-                                {#if showArticulation}
+                            {#if showArticulation}
+                                <h2 class="display-2 p-3 {articulation <= 0.5 ? 'fw-light' : 'fw-medium'}">
                                     {#if articulation <= 0.5}
                                         Short
                                     {:else}
                                         Long
                                     {/if}
-                                {/if}
-                            </h2>
+                                </h2>
+                            {/if}
                             {#if showArticulation && showDynamic}
                                 <h2 class="display-2">+</h2>
                             {/if}
-                            <h2 class="dynamic display-2 p-3 {dynamic <= 0.5 ? 'fw-light' : 'fw-medium'}" style="background: #f8f8f8; color: {color};">
-                                {#if showDynamic}
+                            {#if showDynamic}
+                                <h2 class="dynamic display-2 p-3 {dynamic <= 0.5 ? 'fw-light' : 'fw-medium'}" style="background: #f8f8f8; color: {color};">
                                     {#if dynamic <= 0.5}
                                         Quiet
                                     {:else}
                                         Loud
                                     {/if}
-                                {/if}
-                            </h2>
+                                </h2>
+                            {/if}
                         </div>
                     </div>
                 {:else}
